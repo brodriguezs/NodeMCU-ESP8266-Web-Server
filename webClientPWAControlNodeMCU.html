@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Control de mi Casa con NODEMCU IoT Rocks!</title>
+  </head>
+  <body>
+    <div style="
+    display: flex;
+    justify-content: center;">
+      <h1> Controles</h1>
+    </div>
+    <div style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 10px;">
+      <button onclick="peticion('/luz/1')">Encender Luz Cuarto</button>
+      <button onclick="peticion('/luz/2')">Encender Luz Sala</button>
+      <button onclick="peticion('/rejilla/subir')">Abrir rejilla</button>
+      <button onclick="peticion('/rejilla/bajar')">Cerrar rejilla</button>
+      <button onclick="peticion('/cortina/subir')">Subir Cortina</button>
+      <button onclick="peticion('/cortina/bajar')">Cerrar Cortina</button>
+
+    </div>
+    <div style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ">
+      <input id="ip" value="0" type="text" onchange="updateIp()" placeholder="Ip del nodemcu">IP</input>
+    </div>
+
+  <script>
+    var ip = document.getElementById('ip').value;
+
+    function updateIp (){
+      ip = document.getElementById('ip').value;
+      console.log(ip)
+    }
+
+    function peticion(uri){
+      if(ip != '0'){
+        var myPeticionHttpGet = new Request('http://'+ip+uri, {method: 'GET'});
+        fetch(myPeticionHttpGet)
+        .then(function(response) {
+            if(response.status == 200) return response.json();
+            else {
+              alert("Por favor asigna una Ip válida o verifica que el servidor esté encendido");
+              throw new Error('Something went wrong on api server!')
+            };
+        })
+        .then(function(response) {
+            console.debug(response);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+      } else {
+        alert("Por favor ingresa una Ip");
+      }
+
+    }
+  </script>
+  </body>
+</html>
